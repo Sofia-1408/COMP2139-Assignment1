@@ -1,0 +1,53 @@
+@model List<Event>
+
+@{
+    ViewData["Title"] = "Events";
+    bool searchPerformed = ViewData["SearchPerformed"] as bool? ?? false;
+    string searchString = ViewData["SearchString"] as string;
+}
+
+
+<h2>Events</h2>
+
+<a asp-action="Create" class="btn btn-primary">Create New Event</a> 
+
+@if(Model.Any()) 
+{
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>EventId</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Ticket Price</th>
+            <th>Available Tickets</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var _event in Model)
+        {
+            <tr>
+                <td>@_event.EventId</td>
+                <td>@_event.Title</td>
+                <td>@_event.Category</td>
+                <td>@_event.Date</td>
+                <td>@_event.TicketPrice</td>
+                <td>@_event.AvailableTickets</td>
+            
+                <td>
+                    <a asp-action="Details" asp-route-id="@_event.EventId" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@_event.EventId" class="btn btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@_event.EventId" class="btn btn-danger">Edit</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{ 
+    <p>No events available.</p>
+}
