@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace COMP2139_Assignment1.Controllers;
-
+//There isn't anything unusual about this controller, it is similar to what we did during labs
 public class CategoryController : Controller
 {
-     private readonly ApplicationDbContext _context;
+     private readonly ApplicationDbContext _context; //Connection with the database
 
     public CategoryController(ApplicationDbContext context)
     {
@@ -15,21 +15,21 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index()
+    public IActionResult Index() //Index get
     {
         var categories = _context.Categories.ToList();
         return View(categories);
     }
 
-    [HttpGet("Create")]
-    public IActionResult Create()
+    [HttpGet]
+    public IActionResult Create() //Create get
     {
         return View();
     }
     
-    [HttpPost("Create")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Category category)
+    public IActionResult Create(Category category) //Create post
     {
         if (ModelState.IsValid)
         {
@@ -40,8 +40,8 @@ public class CategoryController : Controller
         return View(category);
     }
 
-    [HttpGet("Edit/{id:int}")]
-    public IActionResult Edit(int id)
+    [HttpGet]
+    public IActionResult Edit(int id) //Edit get
     {
         var category = _context.Categories.Find(id);
         if (category == null)
@@ -52,9 +52,9 @@ public class CategoryController : Controller
         return View(category);
     }
     
-    [HttpPost("Edit/{id:int}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, [Bind("CategoryId, Name, Description")] Category category)
+    public IActionResult Edit(int id, [Bind("CategoryId, Name, Description")] Category category) //Edit post
     {
         if (id != category.CategoryId)
         {
@@ -70,7 +70,7 @@ public class CategoryController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(category.CategoryId))
+                if (!CategoryExists(category.CategoryId))
                 {
                     return NotFound();
                 }
@@ -84,13 +84,13 @@ public class CategoryController : Controller
         return View(category);
     }
 
-    private bool EventExists(int id)
+    private bool CategoryExists(int id) //Checking if the category exists
     {
         return _context.Categories.Any(e => e.CategoryId == id);
     }
     
-    [HttpGet("Details/{id:int}")]
-    public IActionResult Details(int id)
+    [HttpGet]
+    public IActionResult Details(int id) //Details get
     {
         var category = _context.Categories.FirstOrDefault(p => p.CategoryId == id);
         if (category == null)
@@ -101,8 +101,8 @@ public class CategoryController : Controller
         return View(category);
     }
 
-    [HttpGet("Delete/{id:int}")]
-    public IActionResult Delete(int id)
+    [HttpGet]
+    public IActionResult Delete(int id) //Delete get
     {
         var category = _context.Categories.FirstOrDefault(p => p.CategoryId == id);
         if (category == null)
@@ -112,9 +112,9 @@ public class CategoryController : Controller
         return View(category);
     }
 
-    [HttpPost("DeleteConfirmed/{id:int}")]
+    [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
+    public IActionResult DeleteConfirmed(int id) //Delete post
     {
         var category = _context.Categories.Find(id);
         if (category != null)

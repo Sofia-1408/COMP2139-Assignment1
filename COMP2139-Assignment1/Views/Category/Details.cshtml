@@ -1,4 +1,5 @@
 @model Category
+@*Details view, nothing unlike what we did in labs*@
 @{
 
     ViewData["Title"] = "Category Details";
@@ -15,7 +16,7 @@
         <h3 class="card-title">@Model.Name</h3>
 
         <dl class="row">
-            <dt class="col-sm-3">Category</dt>
+            <dt class="col-sm-3">Description</dt>
             <dd class="col-sm-9">@Model.Description</dd>
             
             <dt class="col-sm-3">Category ID</dt>

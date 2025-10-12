@@ -1,0 +1,47 @@
+@model List<Purchase>
+@*Index is not unlike what we've done during labs*@
+@{
+    ViewData["Title"] = "Purchases";
+}
+
+<h2>Purchases</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Purchase</a>
+</p>
+@if (Model.Any())
+{
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Purchase Date</th>
+        <th>Total Cost</th>
+        <th>Guest Contact Info</th>
+        <th>Event</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var p in Model)
+    {
+        <tr>
+            <td>@p.PurchaseDate</td>
+            <td>@p.TotalCost</td>
+            <td>@p.GuestContactInfo</td>
+            <td>@p.Event?.Title</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@p.PurchaseId" class="btn btn-warning">Edit</a> 
+                <a asp-action="Details" asp-route-id="@p.PurchaseId" class="btn btn-info">Details</a> 
+                <a asp-action="Delete" asp-route-id="@p.PurchaseId" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+}
+else
+{
+    <p>No purchases available.</p>
+}

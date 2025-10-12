@@ -1,5 +1,5 @@
 @model Event
-
+@*Delete view, nothing unlike what we did in labs*@
 @{
     ViewBag.Title = "Delete Event";
     Layout = "_Layout";
@@ -23,7 +23,7 @@
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Category)
+            @Model.Category?.Name @*Had to do it this way because I wanted to add Category?*@
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Date)

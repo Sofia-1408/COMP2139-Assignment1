@@ -1,9 +1,7 @@
 @model List<Category>
-
+@*Index is not unlike what we've done during labs*@
 @{
     ViewData["Title"] = "Categories";
-    bool searchPerformed = ViewData["SearchPerformed"] as bool? ?? false;
-    string searchString = ViewData["SearchString"] as string;
 }
 
 
@@ -33,7 +31,7 @@
                 <td>
                     <a asp-action="Details" asp-route-id="@category.CategoryId" class="btn btn-info">Details</a>
                     <a asp-action="Delete" asp-route-id="@category.CategoryId" class="btn btn-danger">Delete</a>
-                    <a asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-danger">Edit</a>
+                    <a asp-action="Edit" asp-route-id="@category.CategoryId" class="btn btn-warning">Edit</a>
                 </td>
             </tr>
         }

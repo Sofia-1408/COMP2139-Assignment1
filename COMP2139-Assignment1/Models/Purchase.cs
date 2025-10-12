@@ -2,9 +2,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace COMP2139_Assignment1.Models;
 
-public class Purchase
+public class Purchase //Purchase model, nothing unlike what we did in labs
 {
-    [Required]
     public int PurchaseId { get; set; }
     [Required]
     [DataType(DataType.Date)]
@@ -13,4 +12,8 @@ public class Purchase
     public double TotalCost { get; set; }
     [Required]
     public string GuestContactInfo { get; set; }
+    
+    public int EventId { get; set; }
+
+    public Event? Event { get; set; }
 }

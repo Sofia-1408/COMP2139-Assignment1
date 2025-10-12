@@ -2,12 +2,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace COMP2139_Assignment1.Models;
 
-public class Event
+public class Event //Event model, nothing unlike what we did in labs
 {
     public int EventId { get; set; }
     [Required]
     public string Title { get; set; }
-    public Category? Category { get; set; }
     [Required]
     [DataType(DataType.Date)]
     public DateTime Date { get; set; }
@@ -15,4 +14,8 @@ public class Event
     public double TicketPrice { get; set; }
     [Required]
     public int AvailableTickets { get; set; }
+    public int CategoryId { get; set; }
+    public Category? Category { get; set; }
+    
+    public List<Purchase>? Purchases { get; set; }
 }
