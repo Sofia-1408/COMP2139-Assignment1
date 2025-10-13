@@ -10,6 +10,34 @@
 
 <a asp-action="Create" class="btn btn-primary">Create New Event</a> 
 
+<form asp-action="index" method="get" style="margin-top: 20px;">
+    <select name="categoryId">
+        <option value=""> All Categories </option>
+        
+        @{
+            var selectedCategoryId = Context.Request.Query["categoryId"].ToString(); //A
+        }
+        @foreach (var c in ViewBag.Categories)
+        {
+            var isSelected = selectedCategoryId == c.Value;
+            @if (isSelected)
+            {
+                <option value="@c.Value" selected>@c.Text</option>
+            }
+            else
+            {
+                <option value="@c.Value">@c.Text</option>
+            }
+        }
+    </select>
+    
+    <input type="text" name="userSearch" placeholder="Search by title..."
+           value="@Context.Request.Query["userSearch"]" />
+    
+    <input type="submit" value="Filter/Search" class="btn btn-secondary" />
+
+</form>
+
 @if(Model.Any()) 
 {
 
@@ -17,9 +45,33 @@
         <thead>
         <tr>
             <th>EventId</th>
-            <th>Title</th>
-            <th>Date</th>
-            <th>Ticket Price</th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.TitleSort"
+                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
+                    Title
+                </a>
+            </th>
+            
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.DateSort"
+                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
+                    Date
+                </a>
+            </th>
+            
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.PriceSort"
+                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
+                    Ticket Price
+                </a>
+            </th>
+            
             <th>Available Tickets</th>
             <th>Category</th>
             <th>Action</th>

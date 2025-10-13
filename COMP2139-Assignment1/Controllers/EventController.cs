@@ -16,14 +16,54 @@ public class EventController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index() //Index get
+    public IActionResult Index(int? categoryId, string userSearch, string sortOrder) //Index get
     {
-        var events = _context.Events.Include(e => e.Category).ToList(); //Gotta include the category
-        return View(events);
+        ViewBag.TitleSort = sortOrder == "title_asc" ? "title_desc" : "title_asc";
+        ViewBag.DateSort = sortOrder == "date_asc" ? "date_desc" : "date_asc";
+        ViewBag.PriceSort = sortOrder == "price_asc" ? "price_desc" : "price_asc";
+        
+        var events = _context.Events.Include(e => e.Category).AsQueryable(); //Gotta include the category //Switched from Tolist to AsQueryable -A
+
+        if (categoryId.HasValue) //filter by category
+        {
+            events = events.Where(e => e.CategoryId == categoryId.Value);
+        }
+
+        if (!string.IsNullOrEmpty(userSearch)) // Searching by title
+        {
+            events = events.Where(e => e.Title.ToLower().Contains(userSearch.ToLower()));
+        }
+
+        switch (sortOrder)
+        {
+            case "title_desc":
+                events = events.OrderByDescending(e => e.Title);
+                break;
+            case "date_asc":
+                events = events.OrderBy(e => e.Date);
+                break;
+            case "date_desc":
+                events = events.OrderByDescending(e => e.Date);
+                break;
+            case "price_asc":
+                events = events.OrderBy(e => e.TicketPrice);
+                break;
+            case "price_desc":
+                events = events.OrderByDescending(e => e.TicketPrice);
+                break;
+            default:
+                events = events.OrderBy(e => e.Title);
+                break;
+        }
+
+        
+        
+        ViewBag.Categories = new SelectList(_context.Categories, "CategoryId", "Name");
+        return View(events.ToList());
     }
 
     [HttpGet]
-    public IActionResult Create() //Create get
+    public IActionResult Create() //Create get 
     {
         ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name"); //Gotta add this so the user can select the category when creating the event
         return View();

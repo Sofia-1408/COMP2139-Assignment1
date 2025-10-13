@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace COMP2139_Assignment1.Models;
 
-public class Category //Category model, nothing unlike what we did in labs
+public class Category //Category model,nothing unlike what we did in labs
 {
     public int CategoryId { get; set; }
     [Required]
