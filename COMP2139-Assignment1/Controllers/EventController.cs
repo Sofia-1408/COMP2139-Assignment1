@@ -16,7 +16,7 @@ public class EventController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(int? categoryId, string userSearch, string sortOrder) //Index get
+    public IActionResult Index(int? categoryId, string userSearch, string sortOrder, DateTime? startDate, DateTime? endDate, string availability) //Index get
     {
         ViewBag.TitleSort = sortOrder == "title_asc" ? "title_desc" : "title_asc";
         ViewBag.DateSort = sortOrder == "date_asc" ? "date_desc" : "date_asc";
@@ -32,6 +32,20 @@ public class EventController : Controller
         if (!string.IsNullOrEmpty(userSearch)) // Searching by title
         {
             events = events.Where(e => e.Title.ToLower().Contains(userSearch.ToLower()));
+        }
+        
+        if(startDate.HasValue)
+            events = events.Where(e => e.Date >= startDate.Value);
+        
+        if(endDate.HasValue)
+            events = events.Where(e => e.Date <= endDate.Value);
+
+        if (!string.IsNullOrEmpty(availability))
+        {
+            if (availability == "available")
+                events = events.Where(e => e.AvailableTickets > 0);
+            else if (availability == "unavailable")
+                events = events.Where(e => e.AvailableTickets == 0);
         }
 
         switch (sortOrder)
@@ -180,5 +194,15 @@ public class EventController : Controller
             return DateTime.SpecifyKind(input, DateTimeKind.Utc); // assume local is already UTC
         return input.ToUniversalTime();
 
+    }
+
+    [HttpGet]
+    public IActionResult Summary()
+    {
+        ViewBag.TotalEvents = _context.Events.Count();
+        ViewBag.TotalCategories = _context.Categories.Count();
+        ViewBag.LowTicketEvents = _context.Events.Where(e => e.AvailableTickets < 5).Include(e => e.Category).ToList();
+        
+        return View();
     }
 }

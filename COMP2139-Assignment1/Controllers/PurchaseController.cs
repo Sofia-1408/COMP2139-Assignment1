@@ -49,7 +49,7 @@ public class PurchaseController : Controller
             purchase.PurchaseDate = ToUtc(purchase.PurchaseDate);
             _context.Add(purchase);
             _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Confirmation", new { purchaseId = purchase.PurchaseId });
         }
         ViewData["EventId"] = new SelectList(_context.Events, "EventId", "Title", purchase.EventId); //ViewData is needed to show a list of events when creating a purchase
         return View(purchase);
@@ -128,5 +128,24 @@ public class PurchaseController : Controller
             return DateTime.SpecifyKind(input, DateTimeKind.Utc); // assume local is already UTC
         return input.ToUniversalTime();
     }
+    
+    
+    [HttpGet]
+    public IActionResult Confirmation(int purchaseId)
+    {
+        
+        var purchase = _context.Purchases
+            .Include(p => p.Event)
+            .ThenInclude(e => e.Category)
+            .FirstOrDefault(p => p.PurchaseId == purchaseId);
+
+        if (purchase == null)
+        {
+            return NotFound();
+        }
+
+        return View(purchase);
+    }
+    
 }
     

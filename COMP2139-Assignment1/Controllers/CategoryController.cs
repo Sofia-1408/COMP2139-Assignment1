@@ -15,10 +15,14 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index() //Index get
+    public IActionResult Index(string searchString) //Index get
     {
-        var categories = _context.Categories.ToList();
-        return View(categories);
+        var categories = _context.Categories.AsQueryable();
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            categories = categories.Where(c => c.Name.ToLower().Contains(searchString.ToLower()));
+        }
+        return View(categories.ToList()); //Was throwing an unhandled exception so we will execute before sending it to view
     }
 
     [HttpGet]

@@ -1,0 +1,37 @@
+@{
+    ViewBag.Title = "Event Summary";
+}
+
+<h2>Event Summary</h2>
+
+<p><strong>Total Events:</strong> @ViewBag.TotalEvents</p>
+<p><strong>Total Categories:</strong> @ViewBag.TotalCategories</p>
+
+<h3>Events with Low Ticket Availability:</h3>
+
+@if (ViewBag.LowTicketEvents.Count > 0)
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event Title</th>
+            <th>Category</th>
+            <th>Available Tickets</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var e in ViewBag.LowTicketEvents)
+        {
+            <tr class="@(e.AvailableTickets < 3 ? "table-danger" : "table-warning")">
+                <td>@e.Title</td>
+                <td>@e.Category?.Name</td>
+                <td>@e.AvailableTickets</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>All events have a healthy amount of tickets available.</p>
+}

@@ -1,0 +1,37 @@
+@model COMP2139_Assignment1.Models.Purchase
+
+@{
+    ViewBag.Title = "Purchase Confirmation";
+}
+
+<h2>Purchase Confirmation</h2>
+<p>Thank you for your purchase!</p>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Event</th>
+        <td>@Model.Event.Title</td>
+    </tr>
+    <tr>
+        <th>Category</th>
+        <td>@Model.Event.Category?.Name</td>
+    </tr>
+    <tr>
+        <th>Purchase Date</th>
+        <td>@Model.PurchaseDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+    </tr>
+    <tr>
+        <th>Guest Info</th>
+        <td>@Model.GuestContactInfo</td>
+    </tr>
+    <tr>
+        <th>Tickets Purchased</th>
+        <td>@Model.TotalCost / @Model.Event.TicketPrice</td>
+    </tr>
+    <tr>
+        <th>Total Cost</th>
+        <td>@Model.TotalCost.ToString("C")</td>
+    </tr>
+</table>
+
+<a asp-action="Index" asp-controller="Event" class="btn btn-primary">Back to Events</a>
