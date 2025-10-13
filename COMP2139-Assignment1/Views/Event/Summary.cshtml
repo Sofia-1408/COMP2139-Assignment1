@@ -22,7 +22,7 @@
         <tbody>
         @foreach (var e in ViewBag.LowTicketEvents)
         {
-            <tr class="@(e.AvailableTickets < 3 ? "table-danger" : "table-warning")">
+            <tr class="@(e.AvailableTickets < 3 ? "table-danger" : "table-warning")"> <!-- Styling for buttons making it red/yellow -->
                 <td>@e.Title</td>
                 <td>@e.Category?.Name</td>
                 <td>@e.AvailableTickets</td>
