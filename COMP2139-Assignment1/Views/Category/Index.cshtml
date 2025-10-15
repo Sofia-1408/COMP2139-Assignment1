@@ -7,11 +7,9 @@
 
 <h2>Categories</h2>
 
-<h2>Categories</h2>
-
 <div class="mb-3">
     <a asp-action="Create" class="btn btn-primary">Create New Category</a>
-    <a class="btn btn-secondary" asp-controller="Event" asp-action="Summary">View Event Summary</a>
+   
 </div>
 
  
@@ -22,7 +20,7 @@
            class="form-control mr-2"
            placeholder="Search by category"
            value="@Context.Request.Query["searchString"]"/>
-    <input type="submit" value="Search/Filter" class="btn btn-secondary"/>e
+    <input type="submit" value="Search/Filter" class="btn btn-secondary"/>
 </form>
 
 

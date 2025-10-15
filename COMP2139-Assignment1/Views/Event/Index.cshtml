@@ -7,8 +7,10 @@
 
 
 <h2>Events</h2>
-
-<a asp-action="Create" class="btn btn-primary">Create New Event</a> 
+<div>
+    <a asp-action="Create" class="btn btn-primary">Create New Event</a> 
+    <a class="btn btn-secondary" asp-controller="Event" asp-action="Summary">View Event Summary</a>
+</div>
 
 <form asp-action="index" method="get" style="margin-top: 20px;">
     <select name="categoryId">
