@@ -22,7 +22,7 @@ public class EventController : Controller
         ViewBag.DateSort = sortOrder == "date_asc" ? "date_desc" : "date_asc";
         ViewBag.PriceSort = sortOrder == "price_asc" ? "price_desc" : "price_asc";
         
-        var events = _context.Events.Include(e => e.Category).AsQueryable(); //Gotta include the category //Switched from Tolist to AsQueryable -A
+        var events = _context.Events.Include(e => e.Category).AsQueryable(); //Switched from Tolist to AsQueryable -A
 
         if (categoryId.HasValue) //filter by category
         {
@@ -79,17 +79,17 @@ public class EventController : Controller
     [HttpGet]
     public IActionResult Create() //Create get 
     {
-        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name"); //Gotta add this so the user can select the category when creating the event
+        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name"); // adding this so the user can select the category when creating the event
         return View();
     }
     
     [HttpPost]
     [ValidateAntiForgeryToken]
     public IActionResult Create(Event @event) //Create post
-    { //I have to name the variable @event because if I just name it event the environment screams at me :(, and I felt bad naming it anything else
+    { 
         if (ModelState.IsValid)
         {
-            @event.Date = ToUtc(@event.Date); //Postgre doesn't like non UTC times..
+            @event.Date = ToUtc(@event.Date); //Postgre doesn't like non UTC times
             _context.Events.Add(@event);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -106,7 +106,7 @@ public class EventController : Controller
         {
             return NotFound();
         }
-        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", @event.CategoryId); //Gotta add this so the user can select the category when editing the event
+        ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", @event.CategoryId); // Adding this so the user can select the category when editing the event
         return View(@event);
     }
     
@@ -152,7 +152,7 @@ public class EventController : Controller
     [HttpGet]
     public IActionResult Details(int id) //Details get
     {
-        var @event = _context.Events.Include(e => e.Category).FirstOrDefault(p => p.EventId == id); //Gotta include the categories 
+        var @event = _context.Events.Include(e => e.Category).FirstOrDefault(p => p.EventId == id); // includes the categories 
         if (@event == null)
         {
             return NotFound();
@@ -164,7 +164,7 @@ public class EventController : Controller
     [HttpGet]
     public IActionResult Delete(int id)
     {
-        var @event = _context.Events.Include(e => e.Category).FirstOrDefault(p => p.EventId == id); //Gotta include the categories
+        var @event = _context.Events.Include(e => e.Category).FirstOrDefault(p => p.EventId == id); //includes the categories
         if (@event == null)
         {
             return NotFound();

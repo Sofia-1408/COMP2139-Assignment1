@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace COMP2139_Assignment1.Controllers;
-//There isn't anything unusual about this controller, it is similar to what we did during labs
+
 public class CategoryController : Controller
 {
      private readonly ApplicationDbContext _context; //Connection with the database

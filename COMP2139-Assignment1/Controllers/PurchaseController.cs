@@ -16,7 +16,7 @@ public class PurchaseController : Controller
     }        
     public IActionResult Index() //Index get
     {
-        var purchases = _context.Purchases.Include(p => p.Event); //Gotta include the events
+        var purchases = _context.Purchases.Include(p => p.Event); // includes the events
         return View(purchases.ToList());
     }
     
@@ -103,7 +103,7 @@ public class PurchaseController : Controller
 
         var purchase = _context.Purchases
             .Include(p => p.Event)
-            .FirstOrDefault(m => m.PurchaseId == id); //Gotta include events
+            .FirstOrDefault(m => m.PurchaseId == id); //includes events
         if (purchase == null)
             return NotFound();
 
@@ -114,7 +114,9 @@ public class PurchaseController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DeleteConfirmed(int id) //Delete post
     {
-        var purchase = _context.Purchases.Find(id);
+        var purchase = _context.Purchases.FirstOrDefault(p => p.PurchaseId == id);
+        if (purchase == null) 
+            return NotFound();
         _context.Purchases.Remove(purchase);
         _context.SaveChanges();
         return RedirectToAction(nameof(Index));

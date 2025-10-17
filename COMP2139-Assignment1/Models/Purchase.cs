@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace COMP2139_Assignment1.Models;
 
-public class Purchase //Purchase model, nothing unlike what we did in labs
+public class Purchase //Purchase model
 {
     public int PurchaseId { get; set; }
     [Required]

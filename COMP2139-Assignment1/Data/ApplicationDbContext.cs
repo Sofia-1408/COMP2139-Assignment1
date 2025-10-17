@@ -9,14 +9,14 @@ public class ApplicationDbContext : DbContext
     {
         
     }
-    public DbSet<Event> Events { get; set; } //Adding DbSet for events categories and purchases, nothing unlike what we did in labs
+    public DbSet<Event> Events { get; set; } //Adding DbSet for events categories and purchases
     public DbSet<Category> Categories { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
         
-        modelBuilder.Entity<Event>() //This is similar to what we did in labs, adding foreign keys and allowing these to be deleted even if they have tables that are dependent on them (will just delete all of them), for example if I delete a category and an event has that category, the event will also be deleted
+        modelBuilder.Entity<Event>() 
             .HasOne(e => e.Category)
             .WithMany(c => c.Events)
             .HasForeignKey(e => e.CategoryId)
@@ -90,5 +90,5 @@ public class ApplicationDbContext : DbContext
                 GuestContactInfo = "Name: Carol Lee, Email: carol.example.com",
                 EventId = 3
             }); 
-    } //Can always add more seed data if we feel like it
+    } 
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace COMP2139_Assignment1.Models;
 
-public class Event //Event model, nothing unlike what we did in labs
+public class Event //Event model
 {
     public int EventId { get; set; }
     [Required]
