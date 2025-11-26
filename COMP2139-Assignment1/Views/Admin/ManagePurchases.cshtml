@@ -1,0 +1,37 @@
+@using COMP2139_Assignment1.Models;
+@model IEnumerable<Purchase>
+
+@{
+    ViewData["Title"] = "Manage Purchases";
+}
+
+<h1>Manage Purchases</h1>
+
+@if (!Model.Any())
+{
+    <p>No purchases found.</p>
+}
+else
+{
+    <table>
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th>Guest Contact</th>
+            <th>Total Cost</th>
+            <th>Purchase Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Event?.Title</td>
+                <td>@p.GuestContactInfo</td>   @* was UserEmail *@
+                <td>@p.TotalCost</td>          @* instead of Quantity *@
+                <td>@p.PurchaseDate.ToShortDateString()</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

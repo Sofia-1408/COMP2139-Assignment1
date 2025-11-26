@@ -1,0 +1,33 @@
+@using COMP2139_Assignment1.Models;
+@model IEnumerable<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+<h1>Manage Users</h1>
+
+@if (!Model.Any())
+{
+    <p>No users found.</p>
+}
+else
+{
+    <table>
+        <thead>
+        <tr>
+            <th>Email</th>
+            <th>Full Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@user.FullName</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -18,4 +18,5 @@ public class Event //Event model
     public Category? Category { get; set; }
     
     public List<Purchase>? Purchases { get; set; }
+    
 }

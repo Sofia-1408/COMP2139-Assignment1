@@ -1,0 +1,37 @@
+@using COMP2139_Assignment1.Models;
+
+@model IEnumerable<Event>
+
+@{
+    ViewData["Title"] = "Manage Events";
+}
+
+<h1>Manage Events</h1>
+
+@if (!Model.Any())
+{
+    <p>No events found.</p>
+}
+else
+{
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Location</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var ev in Model)
+        {
+            <tr>
+                <td>@ev.Title</td>
+                <td>@ev.Category?.Name</td>
+                <td>@ev.Date</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

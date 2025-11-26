@@ -1,0 +1,17 @@
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Admin Dashboard</h1>
+
+<p>Total events: @ViewBag.TotalEvents</p>
+<p>Total users: @ViewBag.TotalUsers</p>
+<p>Total purchases: @ViewBag.TotalPurchases</p>
+
+<hr />
+
+<ul>
+    <li><a href="/Admin/ManageEvents">Manage Events</a></li>
+    <li><a href="/Admin/ManageUsers">Manage Users</a></li>
+    <li><a href="/Admin/ManagePurchases">Manage Purchases</a></li>
+</ul>
