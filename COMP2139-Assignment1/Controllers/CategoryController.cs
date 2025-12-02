@@ -2,6 +2,8 @@ using COMP2139_Assignment1.Data;
 using COMP2139_Assignment1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 
 namespace COMP2139_Assignment1.Controllers;
 
@@ -39,8 +41,11 @@ public class CategoryController : Controller
         {
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
+            Log.Information("Successfully created category");
+
             return RedirectToAction("Index");
         }
+        Log.Information("Unsuccessfully created category");
         return View(category);
     }
 
@@ -71,6 +76,7 @@ public class CategoryController : Controller
             {
                 _context.Categories.Update(category);
                 await _context.SaveChangesAsync();
+                Log.Information("Successfully edited category");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -85,6 +91,7 @@ public class CategoryController : Controller
             }
             return RedirectToAction("Index");
         }
+        Log.Information("Unsuccessfully edited category");
         return View(category);
     }
 
@@ -125,8 +132,10 @@ public class CategoryController : Controller
         {
             _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
+            Log.Information("Successfully deleted category");
             return RedirectToAction("Index");
         }
+        Log.Information("Unsuccessfully created category");
         return View(category);
     }
     [HttpGet]

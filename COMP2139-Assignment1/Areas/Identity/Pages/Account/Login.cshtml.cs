@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
 {
@@ -116,6 +117,8 @@ namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    Log.Information("User logged in from IP {IP}", HttpContext.Connection.RemoteIpAddress?.ToString());
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -130,6 +133,8 @@ namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
                 else
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    Log.Information("User failed to log in from IP {IP}", HttpContext.Connection.RemoteIpAddress?.ToString());
+
                     return Page();
                 }
             }

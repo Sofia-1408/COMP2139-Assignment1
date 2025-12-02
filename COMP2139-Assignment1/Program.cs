@@ -4,10 +4,23 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using COMP2139_Assignment1.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
+// Serilog configuration
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File(
+        path: "logs/log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 10,  
+        shared: true)
+    .Enrich.FromLogContext()
+    .MinimumLevel.Information()
+    .CreateLogger();
+builder.Host.UseSerilog();
 
 // Database connection 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -61,5 +74,11 @@ app.MapControllerRoute(
 
 
 app.MapRazorPages();
+
+// Error handling 500
+app.UseExceptionHandler("/Home/Error500");
+// Error handling like 404
+app.UseStatusCodePagesWithReExecute("/Home/Error{0}");
+
 
 app.Run();

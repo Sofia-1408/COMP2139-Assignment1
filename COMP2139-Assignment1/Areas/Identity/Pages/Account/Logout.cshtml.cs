@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
 {
@@ -28,6 +29,7 @@ namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
         {
             await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+            Log.Information("User logged out from IP {IP}", HttpContext.Connection.RemoteIpAddress?.ToString());
             if (returnUrl != null)
             {
                 return LocalRedirect(returnUrl);

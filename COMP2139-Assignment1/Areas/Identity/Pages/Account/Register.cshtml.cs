@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
 {
@@ -119,6 +120,7 @@ namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    Log.Information("New user registered from IP {IP}", HttpContext.Connection.RemoteIpAddress?.ToString());
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -134,6 +136,7 @@ namespace COMP2139_Assignment1.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
+                Log.Information("New user failed to registered from IP {IP}", HttpContext.Connection.RemoteIpAddress?.ToString());
             }
 
             // If we got this far, something failed, redisplay form

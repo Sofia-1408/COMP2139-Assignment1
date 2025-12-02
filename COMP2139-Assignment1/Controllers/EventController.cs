@@ -3,6 +3,7 @@ using COMP2139_Assignment1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace COMP2139_Assignment1.Controllers;
 //The only "unusual" thing about this controller is the required methods to include categories and list them, other than that nothing unusual
@@ -92,8 +93,10 @@ public class EventController : Controller
             @event.Date = ToUtc(@event.Date); //Postgre doesn't like non UTC times
             _context.Events.Add(@event);
             await _context.SaveChangesAsync();
+            Log.Information("Successfully created an event");
             return RedirectToAction("Index");
         }
+        Log.Information("Unsuccessfully created an event");
         ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", @event.CategoryId); //In case we fail to create, this is required
         return View(@event);
     }
@@ -126,6 +129,7 @@ public class EventController : Controller
                 @event.Date = ToUtc(@event.Date); //Database doesn't like non UTC
                 _context.Events.Update(@event);
                 await _context.SaveChangesAsync();
+                Log.Information("Successfully edited an event");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -140,6 +144,7 @@ public class EventController : Controller
             }
             return RedirectToAction("Index");
         }
+        Log.Information("Unsuccessfully edited an event");
         ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", @event.CategoryId);
         return View(@event);
     }
@@ -181,8 +186,10 @@ public class EventController : Controller
         {
             _context.Events.Remove(@event);
             await _context.SaveChangesAsync();
+            Log.Information("Successfully deleted an event");
             return RedirectToAction("Index");
         }
+        Log.Information("Unsuccessfully edited an event");
         return View(@event);
     }
     
