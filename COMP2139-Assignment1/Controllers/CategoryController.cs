@@ -129,4 +129,17 @@ public class CategoryController : Controller
         }
         return View(category);
     }
+    [HttpGet]
+    public async Task<IActionResult> Search(string searchString)
+    {
+        var categories = _context.Categories.AsQueryable();
+
+        if (!string.IsNullOrEmpty(searchString))
+        {
+            categories = categories.Where(c => c.Name.ToLower().Contains(searchString.ToLower()));
+        }
+
+        return PartialView("_CategoryTable", await categories.ToListAsync());
+    }
+
 }

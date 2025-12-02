@@ -13,7 +13,8 @@
 </div>
 
 <form asp-action="index" method="get" style="margin-top: 20px;">
-    <select name="categoryId">
+    <input type="text" name="userSearch" id="searchBox" placeholder="Search by title..." />
+    <select name="categoryId" id="categoryId">>
         <option value=""> All Categories </option>
         
         @{
@@ -32,74 +33,11 @@
             }
         }
     </select>
-    
-    <input type="text" name="userSearch" placeholder="Search by title..."
-           value="@Context.Request.Query["userSearch"]" />
-    
-    <input type="submit" value="Filter/Search" class="btn btn-secondary" />
-
 </form>
+<div id="eventResults">
+    @await Html.PartialAsync("_EventTable", Model)
+</div>
 
-@if(Model.Any()) 
-{
-
-    <table class="table">
-        <thead>
-        <tr>
-            <th>EventId</th>
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@ViewBag.TitleSort"
-                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
-                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
-                    Title
-                </a>
-            </th>
-            
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@ViewBag.DateSort"
-                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
-                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
-                    Date
-                </a>
-            </th>
-            
-            <th>
-                <a asp-action="Index"
-                   asp-route-sortOrder="@ViewBag.PriceSort"
-                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
-                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
-                    Ticket Price
-                </a>
-            </th>
-            
-            <th>Available Tickets</th>
-            <th>Category</th>
-            <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var _event in Model) 
-        {
-            <tr>
-                <td>@_event.EventId</td>
-                <td>@_event.Title</td>
-                <td>@_event.Date</td>
-                <td>@_event.TicketPrice</td>
-                <td>@_event.AvailableTickets</td>
-                <td>@_event.Category?.Name</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@_event.EventId" class="btn btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@_event.EventId" class="btn btn-danger">Delete</a>
-                    <a asp-action="Edit" asp-route-id="@_event.EventId" class="btn btn-warning">Edit</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
-else
-{ 
-    <p>No events available.</p>
+@section Scripts {
+    <script src="~/js/events.js"></script>
 }

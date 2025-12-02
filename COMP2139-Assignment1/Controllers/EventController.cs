@@ -129,7 +129,7 @@ public class EventController : Controller
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!EventExists(@event.EventId))
+                if (!await EventExists(@event.EventId))
                 {
                     return NotFound();
                 }
@@ -144,9 +144,9 @@ public class EventController : Controller
         return View(@event);
     }
 
-    private bool EventExists(int id) //Just checks if the event exists
+    private async Task<bool> EventExists(int id) //Just checks if the event exists
     {
-        return _context.Events.Any(e => e.EventId == id);
+        return await _context.Events.AnyAsync(e => e.EventId == id);
     }
     
     [HttpGet]
@@ -197,12 +197,30 @@ public class EventController : Controller
     }
 
     [HttpGet]
-    public IActionResult Summary()
+    public async Task<IActionResult> Summary()
     {
-        ViewBag.TotalEvents = _context.Events.Count();
-        ViewBag.TotalCategories = _context.Categories.Count();
+        ViewBag.TotalEvents = await _context.Events.CountAsync();
+        ViewBag.TotalCategories = await _context.Categories.CountAsync();
         ViewBag.LowTicketEvents = _context.Events.Where(e => e.AvailableTickets < 5).Include(e => e.Category).ToList();
         
         return View();
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> Search(string userSearch, int? categoryId)
+    {
+        var events = _context.Events
+            .Include(e => e.Category)
+            .AsQueryable();
+
+        if (!string.IsNullOrEmpty(userSearch))
+            events = events.Where(e => e.Title.ToLower().Contains(userSearch.ToLower()));
+
+        if (categoryId.HasValue)
+            events = events.Where(e => e.CategoryId == categoryId.Value);
+
+        var results = await events.ToListAsync();
+
+        return PartialView("_EventTable", results);
     }
 }

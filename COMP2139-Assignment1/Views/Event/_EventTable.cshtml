@@ -1,0 +1,65 @@
+﻿@model List<Event>
+
+@if (!Model.Any())
+{
+    <p>No events found.</p>
+}
+else
+{
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th>EventId</th>
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.TitleSort"
+                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
+                    Title
+                </a>
+            </th>
+            
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.DateSort"
+                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
+                    Date
+                </a>
+            </th>
+            
+            <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@ViewBag.PriceSort"
+                   asp-route-categoryId="@Context.Request.Query["categoryId"]"
+                   asp-route-userSearch="@Context.Request.Query["userSearch"]">
+                    Ticket Price
+                </a>
+            </th>
+            
+            <th>Available Tickets</th>
+            <th>Category</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        @foreach (var e in Model)
+        {
+            <tr>
+                <td>@e.EventId</td>
+                <td>@e.Title</td>
+                <td>@e.Date</td>
+                <td>@e.TicketPrice.ToString("C")</td>
+                <td>@e.AvailableTickets</td>
+                <td>@e.Category?.Name</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@e.EventId" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@e.EventId" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@e.EventId" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
