@@ -15,14 +15,14 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(string searchString) //Index get
+    public async Task<IActionResult> Index(string searchString) //Index get
     {
         var categories = _context.Categories.AsQueryable();
         if (!string.IsNullOrEmpty(searchString))
         {
             categories = categories.Where(c => c.Name.ToLower().Contains(searchString.ToLower()));
         }
-        return View(categories.ToList()); //Was throwing an unhandled exception so we will execute before sending it to view
+        return View(await categories.ToListAsync()); //Was throwing an unhandled exception so we will execute before sending it to view
     }
 
     [HttpGet]
@@ -33,21 +33,21 @@ public class CategoryController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Category category) //Create post
+    public async Task<IActionResult> Create(Category category) //Create post
     {
         if (ModelState.IsValid)
         {
             _context.Categories.Add(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         return View(category);
     }
 
     [HttpGet]
-    public IActionResult Edit(int id) //Edit get
+    public async Task<IActionResult> Edit(int id) //Edit get
     {
-        var category = _context.Categories.Find(id);
+        var category = await _context.Categories.FindAsync(id);
         if (category == null)
         {
             return NotFound();
@@ -58,7 +58,7 @@ public class CategoryController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, [Bind("CategoryId, Name, Description")] Category category) //Edit post
+    public async Task<IActionResult> Edit(int id, [Bind("CategoryId, Name, Description")] Category category) //Edit post
     {
         if (id != category.CategoryId)
         {
@@ -70,7 +70,7 @@ public class CategoryController : Controller
             try
             {
                 _context.Categories.Update(category);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -94,9 +94,9 @@ public class CategoryController : Controller
     }
     
     [HttpGet]
-    public IActionResult Details(int id) //Details get
+    public async Task<IActionResult> Details(int id) //Details get
     {
-        var category = _context.Categories.FirstOrDefault(p => p.CategoryId == id);
+        var category = await _context.Categories.FirstOrDefaultAsync(p => p.CategoryId == id);
         if (category == null)
         {
             return NotFound();
@@ -106,9 +106,9 @@ public class CategoryController : Controller
     }
 
     [HttpGet]
-    public IActionResult Delete(int id) //Delete get
+    public async Task<IActionResult> Delete(int id) //Delete get
     {
-        var category = _context.Categories.FirstOrDefault(p => p.CategoryId == id);
+        var category = await _context.Categories.FirstOrDefaultAsync(p => p.CategoryId == id);
         if (category == null)
         {
             return NotFound();
@@ -118,13 +118,13 @@ public class CategoryController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id) //Delete post
+    public async Task<IActionResult> DeleteConfirmed(int id) //Delete post
     {
-        var category = _context.Categories.Find(id);
+        var category = await _context.Categories.FindAsync(id);
         if (category != null)
         {
             _context.Categories.Remove(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         return View(category);

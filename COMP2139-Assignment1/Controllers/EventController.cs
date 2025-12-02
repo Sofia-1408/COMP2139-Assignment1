@@ -16,7 +16,7 @@ public class EventController : Controller
     }
 
     [HttpGet]
-    public IActionResult Index(int? categoryId, string userSearch, string sortOrder, DateTime? startDate, DateTime? endDate, string availability) //Index get
+    public async Task<IActionResult> Index(int? categoryId, string userSearch, string sortOrder, DateTime? startDate, DateTime? endDate, string availability) //Index get
     {
         ViewBag.TitleSort = sortOrder == "title_asc" ? "title_desc" : "title_asc";
         ViewBag.DateSort = sortOrder == "date_asc" ? "date_desc" : "date_asc";
@@ -73,7 +73,7 @@ public class EventController : Controller
         
         
         ViewBag.Categories = new SelectList(_context.Categories, "CategoryId", "Name");
-        return View(events.ToList());
+        return View(await events.ToListAsync());
     }
 
     [HttpGet]
@@ -85,13 +85,13 @@ public class EventController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create(Event @event) //Create post
+    public async Task<IActionResult> Create(Event @event) //Create post
     { 
         if (ModelState.IsValid)
         {
             @event.Date = ToUtc(@event.Date); //Postgre doesn't like non UTC times
             _context.Events.Add(@event);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", @event.CategoryId); //In case we fail to create, this is required
@@ -99,9 +99,9 @@ public class EventController : Controller
     }
 
     [HttpGet]
-    public IActionResult Edit(int id) //Edit get
+    public async Task<IActionResult> Edit(int id) //Edit get
     {
-        var @event = _context.Events.Find(id);
+        var @event = await _context.Events.FindAsync(id);
         if (@event == null)
         {
             return NotFound();
@@ -112,7 +112,7 @@ public class EventController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, [Bind("EventId,Title,Date,TicketPrice,AvailableTickets,CategoryId")] Event @event) //Edit post
+    public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,Date,TicketPrice,AvailableTickets,CategoryId")] Event @event) //Edit post
     {
         if (id != @event.EventId)
         {
@@ -125,7 +125,7 @@ public class EventController : Controller
             {
                 @event.Date = ToUtc(@event.Date); //Database doesn't like non UTC
                 _context.Events.Update(@event);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -150,9 +150,9 @@ public class EventController : Controller
     }
     
     [HttpGet]
-    public IActionResult Details(int id) //Details get
+    public async Task<IActionResult> Details(int id) //Details get
     {
-        var @event = _context.Events.Include(e => e.Category).FirstOrDefault(p => p.EventId == id); // includes the categories 
+        var @event = await _context.Events.Include(e => e.Category).FirstOrDefaultAsync(p => p.EventId == id); // includes the categories 
         if (@event == null)
         {
             return NotFound();
@@ -162,9 +162,9 @@ public class EventController : Controller
     }
 
     [HttpGet]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var @event = _context.Events.Include(e => e.Category).FirstOrDefault(p => p.EventId == id); //includes the categories
+        var @event = await _context.Events.Include(e => e.Category).FirstOrDefaultAsync(p => p.EventId == id); //includes the categories
         if (@event == null)
         {
             return NotFound();
@@ -174,13 +174,13 @@ public class EventController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id) //Delete post
+    public async Task<IActionResult> DeleteConfirmed(int id) //Delete post
     {
-        var @event = _context.Events.Find(id);
+        var @event = await _context.Events.FindAsync(id);
         if (@event != null)
         {
             _context.Events.Remove(@event);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
         return View(@event);

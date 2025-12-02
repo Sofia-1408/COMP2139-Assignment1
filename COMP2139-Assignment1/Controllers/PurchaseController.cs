@@ -14,19 +14,19 @@ public class PurchaseController : Controller
     {
         _context = context;
     }        
-    public IActionResult Index() //Index get
+    public async Task<IActionResult> Index() //Index get
     {
         var purchases = _context.Purchases.Include(p => p.Event); // includes the events
-        return View(purchases.ToList());
+        return View(await purchases.ToListAsync());
     }
     
-    public IActionResult Details(int? id) //Details get
+    public async Task<IActionResult> Details(int? id) //Details get
     {
         if (id == null)
             return NotFound();
-        var purchase = _context.Purchases
+        var purchase = await _context.Purchases
             .Include(p => p.Event)
-            .FirstOrDefault(m => m.PurchaseId == id); //Must include the event
+            .FirstOrDefaultAsync(m => m.PurchaseId == id); //Must include the event
 
         if (purchase == null)
             return NotFound();
@@ -42,25 +42,25 @@ public class PurchaseController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Create([Bind("PurchaseId,PurchaseDate,TotalCost,GuestContactInfo,EventId")] Purchase purchase) //Create post
+    public async Task<IActionResult> Create([Bind("PurchaseId,PurchaseDate,TotalCost,GuestContactInfo,EventId")] Purchase purchase) //Create post
     {
         if (ModelState.IsValid)
         {
             purchase.PurchaseDate = ToUtc(purchase.PurchaseDate);
             _context.Add(purchase);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return RedirectToAction("Confirmation", new { purchaseId = purchase.PurchaseId });
         }
         ViewData["EventId"] = new SelectList(_context.Events, "EventId", "Title", purchase.EventId); //ViewData is needed to show a list of events when creating a purchase
         return View(purchase);
     }
     
-    public IActionResult Edit(int? id) //Edit get
+    public async Task<IActionResult> Edit(int? id) //Edit get
     { 
         if (id == null)
             return NotFound();
 
-        var purchase = _context.Purchases.Find(id);
+        var purchase = await _context.Purchases.FindAsync(id);
         if (purchase == null)
             return NotFound();
 
@@ -70,7 +70,7 @@ public class PurchaseController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, [Bind("PurchaseId,PurchaseDate,TotalCost,GuestContactInfo,EventId")] Purchase purchase) //Edit post
+    public async Task<IActionResult> Edit(int id, [Bind("PurchaseId,PurchaseDate,TotalCost,GuestContactInfo,EventId")] Purchase purchase) //Edit post
     {
         if (id != purchase.PurchaseId)
             return NotFound();
@@ -81,7 +81,7 @@ public class PurchaseController : Controller
             {
                 purchase.PurchaseDate = ToUtc(purchase.PurchaseDate);
                 _context.Update(purchase);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -96,14 +96,14 @@ public class PurchaseController : Controller
         return View(purchase);
         }
     
-    public IActionResult Delete(int? id) //Delete get
+    public async Task<IActionResult> Delete(int? id) //Delete get
     {
         if (id == null)
             return NotFound();
 
-        var purchase = _context.Purchases
+        var purchase = await _context.Purchases
             .Include(p => p.Event)
-            .FirstOrDefault(m => m.PurchaseId == id); //includes events
+            .FirstOrDefaultAsync(m => m.PurchaseId == id); //includes events
         if (purchase == null)
             return NotFound();
 
@@ -112,13 +112,13 @@ public class PurchaseController : Controller
     
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id) //Delete post
+    public async Task<IActionResult> DeleteConfirmed(int id) //Delete post
     {
-        var purchase = _context.Purchases.FirstOrDefault(p => p.PurchaseId == id);
+        var purchase = await _context.Purchases.FirstOrDefaultAsync(p => p.PurchaseId == id);
         if (purchase == null) 
             return NotFound();
         _context.Purchases.Remove(purchase);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
     }
         
@@ -133,13 +133,13 @@ public class PurchaseController : Controller
     
     
     [HttpGet]
-    public IActionResult Confirmation(int purchaseId)
+    public async Task<IActionResult> Confirmation(int purchaseId)
     {
         
-        var purchase = _context.Purchases
+        var purchase = await _context.Purchases
             .Include(p => p.Event)
             .ThenInclude(e => e.Category)
-            .FirstOrDefault(p => p.PurchaseId == purchaseId);
+            .FirstOrDefaultAsync(p => p.PurchaseId == purchaseId);
 
         if (purchase == null)
         {

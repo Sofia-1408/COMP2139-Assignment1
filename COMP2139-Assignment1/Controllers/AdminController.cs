@@ -18,11 +18,11 @@ namespace COMP2139_Assignment1.Controllers
         }
 
         //Admin Dashboard page
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var totalEvents = _context.Events.Count();
-            var totalUsers = _context.Users.Count();
-            var totalPurchases = _context.Purchases.Count();
+            var totalEvents = await _context.Events.CountAsync();
+            var totalUsers = await _context.Users.CountAsync();
+            var totalPurchases = await _context.Purchases.CountAsync();
 
             ViewBag.TotalEvents = totalEvents;
             ViewBag.TotalUsers = totalUsers;
