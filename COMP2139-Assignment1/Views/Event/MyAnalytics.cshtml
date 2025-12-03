@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["Title"] = "Analytics Dashboard";
+}
+
+<h2>Event Analytics</h2>
+
+<hr />
+
+<h4>Ticket Sales by Category</h4>
+@* This is the circle chart that shows purchases based on categories, 50% because else it is too large *@
+<div style="width: 50%;"> 
+    <canvas id="salesByCategoryChart"></canvas>
+</div>
+<hr />
+
+@* This is the classic chart with a line going up down based on the revenues made each month *@
+<h4>Revenue Per Month</h4>
+<canvas id="revenueChart" height="100"></canvas>
+<hr />
+
+@* This is the table showing top 5 best selling events on the site *@
+<h4>Top 5 Best-Selling Events</h4>
+<table class="table table-striped" id="topEventsTable">
+    <thead>
+    <tr>
+        <th>Event</th>
+        <th>Tickets Sold</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@* Needed for charts  *@
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/analytics.js"></script>
+}

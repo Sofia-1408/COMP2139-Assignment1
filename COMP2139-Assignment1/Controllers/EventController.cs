@@ -230,4 +230,75 @@ public class EventController : Controller
 
         return PartialView("_EventTable", results);
     }
+    
+    
+    [HttpGet] //get page for MyAnalytics
+    public IActionResult MyAnalytics()
+    {
+        return View();
+    }
+    
+    [HttpGet] //Get page for getting revenuepermonth
+    public async Task<IActionResult> GetRevenuePerMonth()
+    {
+        var raw = await _context.Purchases
+            .GroupBy(p => new { p.PurchaseDate.Year, p.PurchaseDate.Month })
+            .Select(g => new
+            {
+                Year = g.Key.Year,
+                Month = g.Key.Month, 
+                Revenue = g.Sum(e => e.TotalCost)
+            })
+            .OrderBy(x => x.Year)
+            .ThenBy(x => x.Month)
+            .ToListAsync();
+
+//Needed to be done like this else there is an error with dates
+        var result = raw.Select(x => new
+        {
+            month = $"{x.Year}-{x.Month:00}",
+            revenue = x.Revenue
+        });
+
+        return Json(result);
+    }
+
+    
+    [HttpGet]
+    public async Task<IActionResult> GetTopEvents()
+    {
+        //Getting only 5 events ordered by sold tickets
+        var data = await _context.Events
+            .Select(e => new
+            {
+                title = e.Title,
+                sold = e.Purchases.Sum(p => (int?)p.Quantity) ?? 0
+            })
+            .OrderByDescending(x => x.sold)
+            .Take(5)
+            .ToListAsync();
+
+        return Json(data);
+    }
+
+    
+    [HttpGet]
+    public async Task<IActionResult> GetSalesByCategory()
+    {
+        //Returns categories and looks at their purchases and sending them to the page (alongside the categories themselves)
+        //So that the chart can be created
+        var data = await _context.Categories
+            .Select(c => new
+            {
+                category = c.Name,
+                ticketsSold = c.Events
+                    .SelectMany(e => e.Purchases)
+                    .Sum(p => (int?)p.Quantity) ?? 0
+            })
+            .ToListAsync();
+
+        return Json(data);
+    }
+
+
 }
