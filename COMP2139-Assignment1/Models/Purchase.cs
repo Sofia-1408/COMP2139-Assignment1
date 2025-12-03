@@ -12,6 +12,9 @@ public class Purchase //Purchase model
     public double TotalCost { get; set; }
     [Required]
     public string GuestContactInfo { get; set; }
+    [Required]
+    public int Quantity { get; set; }
+
     
     public int EventId { get; set; }
 

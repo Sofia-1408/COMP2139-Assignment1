@@ -3,6 +3,7 @@ using COMP2139_Assignment1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace COMP2139_Assignment1.Controllers;
 
@@ -148,6 +149,95 @@ public class PurchaseController : Controller
 
         return View(purchase);
     }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddToCart(int eventId, int quantity)
+    {
+        var evt = await _context.Events.FindAsync(eventId);
+        if (evt == null) return NotFound();
+
+        var cartJson = HttpContext.Session.GetString("Cart");
+        var cart = string.IsNullOrEmpty(cartJson)
+            ? new CartViewModel()
+            : JsonConvert.DeserializeObject<CartViewModel>(cartJson);
+
+        var existing = cart.Items.FirstOrDefault(i => i.EventId == eventId);
+
+        if (existing == null)
+        {
+            cart.Items.Add(new CartItem
+            {
+                EventId = evt.EventId,
+                Title = evt.Title,
+                TicketPrice = evt.TicketPrice,
+                Quantity = quantity,
+                AvailableTickets = evt.AvailableTickets
+            });
+        }
+        else
+        {
+            existing.Quantity += quantity;
+        }
+
+        HttpContext.Session.SetString("Cart", JsonConvert.SerializeObject(cart));
+
+        return Json(new { success = true, totalItems = cart.Items.Sum(i => i.Quantity) });
+    }
+    
+    [HttpGet]
+    public IActionResult Cart()
+    {
+        var cartJson = HttpContext.Session.GetString("Cart");
+        var cart = string.IsNullOrEmpty(cartJson)
+            ? new CartViewModel()
+            : JsonConvert.DeserializeObject<CartViewModel>(cartJson);
+
+        return View(cart);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> Complete()
+    {
+        var cartJson = HttpContext.Session.GetString("Cart");
+        if (string.IsNullOrEmpty(cartJson))
+            return RedirectToAction("Cart");
+
+        var cart = JsonConvert.DeserializeObject<CartViewModel>(cartJson);
+
+        foreach (var item in cart.Items)
+        {
+            var evt = await _context.Events.FindAsync(item.EventId);
+            if (evt == null) continue;
+
+            if (item.Quantity > evt.AvailableTickets)
+                return BadRequest("Not enough tickets remaining.");
+
+            evt.AvailableTickets -= item.Quantity;
+
+            _context.Purchases.Add(new Purchase
+            {
+                EventId = evt.EventId,
+                GuestContactInfo = "Anonymous User",
+                PurchaseDate = DateTime.UtcNow,
+                Quantity = item.Quantity,
+                TotalCost = evt.TicketPrice * item.Quantity
+            });
+        }
+
+        await _context.SaveChangesAsync();
+
+        // clear the cart
+        HttpContext.Session.Remove("Cart");
+
+        return RedirectToAction("CompleteConfirmation");
+    }
+    
+    public IActionResult CompleteConfirmation()
+    {
+        return View();
+    }
+
+
     
 }
     

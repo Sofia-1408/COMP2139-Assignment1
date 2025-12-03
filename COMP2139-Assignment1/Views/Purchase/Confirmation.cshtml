@@ -4,34 +4,23 @@
     ViewBag.Title = "Purchase Confirmation";
 }
 
-<h2>Purchase Confirmation</h2>
-<p>Thank you for your purchase!</p>
+<h2>Purchase Complete!</h2>
 
-<table class="table table-bordered">
-    <tr>
-        <th>Event</th>
-        <td>@Model.Event.Title</td>
-    </tr>
-    <tr>
-        <th>Category</th>
-        <td>@Model.Event.Category?.Name</td>
-    </tr>
-    <tr>
-        <th>Purchase Date</th>
-        <td>@Model.PurchaseDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
-    </tr>
-    <tr>
-        <th>Guest Info</th>
-        <td>@Model.GuestContactInfo</td>
-    </tr>
-    <tr>
-        <th>Tickets Purchased</th>
-        <td>@Model.TotalCost / @Model.Event.TicketPrice</td>
-    </tr>
-    <tr>
-        <th>Total Cost</th>
-        <td>@Model.TotalCost.ToString("C")</td>
-    </tr>
-</table>
-
+<div class="modal fade show d-block" id="doneModal">
+    <div class="modal-dialog">
+        <div class="modal-content p-4 text-center">
+            <h3>Thank you for your purchase 🎉</h3>
+            <p>Your tickets are confirmed.</p>
+        </div>
+    </div>
+</div>
 <a asp-action="Index" asp-controller="Event" class="btn btn-primary">Back to Events</a>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
+<script>
+    confetti({
+        particleCount: 200,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
+</script>

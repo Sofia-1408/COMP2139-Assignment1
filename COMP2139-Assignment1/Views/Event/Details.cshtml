@@ -26,7 +26,28 @@
             <dt class="col-sm-2">Category</dt>
             <dd class="col-sm-10">@Model.Category?.Name</dd>
         </dl>
+        <div class="mt-3">
+            <p>Price: <span id="price" data-price="@Model.TicketPrice">@Model.TicketPrice.ToString("C")</span></p>
+
+            <label>Quantity:</label>
+            <input id="qty" type="number" value="1" min="1" max="@Model.AvailableTickets" class="form-control" style="width:120px" />
+
+            <p class="mt-2">
+                <strong>Total:</strong>
+                <span id="total">@Model.TicketPrice.ToString("C")</span>
+            </p>
+
+            <div class="alert alert-warning d-none" id="lowStockWarning" data-available="@Model.AvailableTickets"></div>
+
+            <button id="addBtn" data-eventid="@Model.EventId" class="btn btn-primary mt-2">
+                Add to Cart
+            </button>
+        </div>
+
         <a asp-action="Edit" asp-route-id="@Model.EventId" class="btn btn-primary">Edit</a>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 </div>
+@section Scripts {
+    <script src="~/js/cart.js"></script>
+}
