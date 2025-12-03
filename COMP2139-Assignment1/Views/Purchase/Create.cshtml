@@ -20,6 +20,11 @@
         <input asp-for="GuestContactInfo" class="form-control" />
     </div>
     <div class="form-group">
+        <label asp-for="Quantity" class="control-label"></label>
+        <input asp-for="Quantity" class="form-control" />
+        <span asp-validation-for="Quantity" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="EventId">Event</label>
         <select asp-for="EventId" asp-items="ViewBag.EventId" class="form-control"></select> @*Viewbag stores the list of events*@
     </div>

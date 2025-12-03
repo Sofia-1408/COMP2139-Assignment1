@@ -35,13 +35,15 @@ builder.Services
         options.SignIn.RequireConfirmedAccount = false;
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddDefaultTokenProviders(); //Password reset and email confirmation tokens for logins
+    .AddDefaultTokenProviders();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSession(); //Adds a session (necessary for the number display next to the cart)
 
-var app = builder.Build();
+
+var app = builder.Build(); 
 
 //  identity seeding creates roles + admin user if they dont exist
 using (var scope = app.Services.CreateScope())
@@ -55,6 +57,8 @@ if (!app.Environment.IsDevelopment()) //HTTP request handling
     app.UseExceptionHandler("/Home/Error"); // Error sign will show if page crashes
     app.UseHsts(); // Forces the browser to always use HTTPS
 }
+
+app.UseSession(); //Adds a session (necessary for the number display next to the cart)
 
 app.UseHttpsRedirection(); // This should convert HTTP to HTTPS
 app.UseStaticFiles();

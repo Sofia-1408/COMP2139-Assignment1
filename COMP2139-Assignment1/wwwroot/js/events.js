@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-
+// Javascript for searchbox and category select
     const searchBox = document.getElementById("searchBox");
     const categorySelect = document.getElementById("categoryId");
     const resultsDiv = document.getElementById("eventResults");
@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(error => console.error("Error loading events:", error));
     }
 
-    // Live search typing
+    // Update when searchhing
     searchBox.addEventListener("keyup", performSearch);
 
     // Update when category changes

@@ -1,10 +1,11 @@
 ﻿document.addEventListener("DOMContentLoaded", () => {
 
+    // Adding all of the needed constants
     const qty = document.getElementById("qty");
     const price = document.getElementById("price").dataset.price;
     const total = document.getElementById("total");
     const addBtn = document.getElementById("addBtn");
-    const cartBadge = document.getElementById("cartBadge");
+    const cartBadge = document.getElementById("cart-count");
     const stockWarning = document.getElementById("lowStockWarning");
 
     function updateTotal() {
@@ -37,6 +38,7 @@
             .then(data => {
                 cartBadge.textContent = data.totalItems;
                 cartBadge.classList.remove("d-none");
+                window.location.href = "/Event/Index"; //Returning to index of event
             });
     });
 

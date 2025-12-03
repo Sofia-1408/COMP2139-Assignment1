@@ -208,6 +208,9 @@ namespace COMP2139_Assignment1.Migrations
                     b.Property<DateTime>("PurchaseDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
                     b.Property<double>("TotalCost")
                         .HasColumnType("double precision");
 
@@ -224,6 +227,7 @@ namespace COMP2139_Assignment1.Migrations
                             EventId = 1,
                             GuestContactInfo = "Name: Alice Johnson, Email: alice@example.com",
                             PurchaseDate = new DateTime(2025, 6, 12, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Quantity = 0,
                             TotalCost = 150.0
                         },
                         new
@@ -232,6 +236,7 @@ namespace COMP2139_Assignment1.Migrations
                             EventId = 2,
                             GuestContactInfo = "Name: Bob Smith, Email: bob.example.com",
                             PurchaseDate = new DateTime(2025, 6, 12, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Quantity = 0,
                             TotalCost = 60.0
                         },
                         new
@@ -240,6 +245,7 @@ namespace COMP2139_Assignment1.Migrations
                             EventId = 3,
                             GuestContactInfo = "Name: Carol Lee, Email: carol.example.com",
                             PurchaseDate = new DateTime(2025, 6, 15, 0, 0, 0, 0, DateTimeKind.Utc),
+                            Quantity = 0,
                             TotalCost = 80.0
                         });
                 });
@@ -323,12 +329,10 @@ namespace COMP2139_Assignment1.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
@@ -365,12 +369,10 @@ namespace COMP2139_Assignment1.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("character varying(128)");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
                         .HasColumnType("text");

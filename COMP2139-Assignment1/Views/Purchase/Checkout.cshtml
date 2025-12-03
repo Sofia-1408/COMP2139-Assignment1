@@ -1,0 +1,64 @@
+﻿@model CartViewModel
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Checkout</h2>
+
+@if (!Model.Items.Any())
+{
+    <p>Cart is empty!</p>
+    <a asp-controller="Event" asp-action="Index" class="btn btn-primary">Back to Events</a>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>$@item.TicketPrice</td>
+                <td>@item.Quantity</td>
+                <td>$@(item.TicketPrice * item.Quantity)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <h4>Total:$@Model.Total</h4>
+
+    <hr />
+
+    <h3>Contact information</h3> 
+//Adds the contact information that will be added to the database
+    <form method="post" asp-action="Complete">
+
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input class="form-control" name="FullName" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input class="form-control" name="Email" type="email" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input class="form-control" name="Phone" />
+        </div>
+
+        <button class="btn btn-success">Complete purchase</button>
+
+    </form>
+}

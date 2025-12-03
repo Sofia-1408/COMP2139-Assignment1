@@ -136,7 +136,7 @@ public class PurchaseController : Controller
     [HttpGet]
     public async Task<IActionResult> Confirmation(int purchaseId)
     {
-        
+        //Confirmation for the items added to the cart
         var purchase = await _context.Purchases
             .Include(p => p.Event)
             .ThenInclude(e => e.Category)
@@ -150,9 +150,25 @@ public class PurchaseController : Controller
         return View(purchase);
     }
     
-    [HttpPost]
-    public async Task<IActionResult> AddToCart(int eventId, int quantity)
+    [HttpGet]
+    public IActionResult Cart()
     {
+        var cartJson = HttpContext.Session.GetString("Cart");
+
+        var cart = string.IsNullOrEmpty(cartJson)
+            ? new CartViewModel()
+            : JsonConvert.DeserializeObject<CartViewModel>(cartJson);
+
+        return View(cart);
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddToCart([FromBody] Dictionary<string, int> data) //Easier with dictionary
+    {
+        //Method for displaying the cart list
+        int eventId = data["eventId"];
+        int quantity = data["quantity"];
+        
         var evt = await _context.Events.FindAsync(eventId);
         if (evt == null) return NotFound();
 
@@ -184,60 +200,67 @@ public class PurchaseController : Controller
         return Json(new { success = true, totalItems = cart.Items.Sum(i => i.Quantity) });
     }
     
-    [HttpGet]
-    public IActionResult Cart()
-    {
-        var cartJson = HttpContext.Session.GetString("Cart");
-        var cart = string.IsNullOrEmpty(cartJson)
-            ? new CartViewModel()
-            : JsonConvert.DeserializeObject<CartViewModel>(cartJson);
-
-        return View(cart);
-    }
-    
     [HttpPost]
-    public async Task<IActionResult> Complete()
+    public async Task<IActionResult> Complete(string FullName, string Email, string Phone)
     {
+        //Post method for finishing the purchase
         var cartJson = HttpContext.Session.GetString("Cart");
+
         if (string.IsNullOrEmpty(cartJson))
             return RedirectToAction("Cart");
 
         var cart = JsonConvert.DeserializeObject<CartViewModel>(cartJson);
 
+  
+        string contactInfo =
+            $"Name: {FullName}\nEmail: {Email}\nPhone: {Phone}";
+
+        int lastPurchaseId = 0;
+
         foreach (var item in cart.Items)
         {
             var evt = await _context.Events.FindAsync(item.EventId);
-            if (evt == null) continue;
+
+            if (evt == null)
+                continue;
 
             if (item.Quantity > evt.AvailableTickets)
-                return BadRequest("Not enough tickets remaining.");
+                return BadRequest("Not enough stock."); //In case the user tries to purchase too much
 
             evt.AvailableTickets -= item.Quantity;
 
-            _context.Purchases.Add(new Purchase
+            var purchase = new Purchase
             {
                 EventId = evt.EventId,
-                GuestContactInfo = "Anonymous User",
+                GuestContactInfo = contactInfo,
                 PurchaseDate = DateTime.UtcNow,
                 Quantity = item.Quantity,
                 TotalCost = evt.TicketPrice * item.Quantity
-            });
+            };
+
+            _context.Purchases.Add(purchase);
+            await _context.SaveChangesAsync();
+
+            lastPurchaseId = purchase.PurchaseId;
         }
 
-        await _context.SaveChangesAsync();
-
-        // clear the cart
         HttpContext.Session.Remove("Cart");
 
-        return RedirectToAction("CompleteConfirmation");
+        return RedirectToAction("Confirmation", new { purchaseId = lastPurchaseId });
     }
+
     
-    public IActionResult CompleteConfirmation()
+    [HttpGet]
+    public IActionResult Checkout()
     {
-        return View();
+        var cartJson = HttpContext.Session.GetString("Cart");
+
+        if (string.IsNullOrEmpty(cartJson))
+            return RedirectToAction("Cart");
+
+        var cart = JsonConvert.DeserializeObject<CartViewModel>(cartJson);
+
+        return View(cart);
     }
-
-
-    
 }
     

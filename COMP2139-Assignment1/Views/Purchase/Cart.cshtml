@@ -1,0 +1,44 @@
+﻿@model COMP2139_Assignment1.Models.CartViewModel
+
+@{
+    ViewData["Title"] = "Your Cart";
+}
+
+<h2>Your Cart</h2>
+
+@if (!Model.Items.Any())
+{
+    <p>Your cart is empty!</p>
+    <a asp-controller="Event" asp-action="Index" class="btn btn-primary">Back to Events</a>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Event</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        @* Cart page with all of the items you have added *@
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>$@item.TicketPrice</td>
+                <td>@item.Quantity</td>
+                <td>$@(item.TicketPrice * item.Quantity)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <h4>Cart amount: $@Model.Total</h4>
+
+    <a asp-controller="Purchase" asp-action="Checkout" class="btn btn-success">
+        Go to checkout
+    </a>
+}

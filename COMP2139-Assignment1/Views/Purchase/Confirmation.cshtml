@@ -1,26 +1,45 @@
 @model COMP2139_Assignment1.Models.Purchase
 
 @{
-    ViewBag.Title = "Purchase Confirmation";
+    ViewData["Title"] = "Purchase complete";
 }
 
-<h2>Purchase Complete!</h2>
-
-<div class="modal fade show d-block" id="doneModal">
-    <div class="modal-dialog">
-        <div class="modal-content p-4 text-center">
-            <h3>Thank you for your purchase 🎉</h3>
-            <p>Your tickets are confirmed.</p>
+<div class="py-5" style="background-color:#cfe9f5;">
+    <div class="container">
+        <h1 class="mb-4">Purchase complete!</h1>
+@* The card for confetti *@
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h3 class="card-title mb-2">
+                    Thank you for your purchase 🎉
+                </h3>
+                <p class="card-text mb-4">
+                    Your tickets are confirmed!!
+                </p>
+                <a asp-controller="Event" asp-action="Index" class="btn btn-primary">
+                    Back to Events!
+                </a>
+            </div>
         </div>
     </div>
 </div>
-<a asp-action="Index" asp-controller="Event" class="btn btn-primary">Back to Events</a>
 
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti"></script>
-<script>
-    confetti({
-        particleCount: 200,
-        spread: 70,
-        origin: { y: 0.6 }
-    });
-</script>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            confetti({ //Code for confetti
+                particleCount: 160,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            let badge = document.getElementById("cart-count");
+            if (badge) {
+                badge.textContent = "0"; //Code for reseting the number back to 0
+            }
+        });
+    </script>
+}

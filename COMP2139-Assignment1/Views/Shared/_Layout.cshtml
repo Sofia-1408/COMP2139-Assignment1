@@ -1,4 +1,16 @@
-﻿<!DOCTYPE html>
+﻿@using Newtonsoft.Json
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var cartJson = HttpContextAccessor.HttpContext.Session.GetString("Cart");
+    int cartCount = 0;
+
+    if (!string.IsNullOrEmpty(cartJson))
+    {
+        var cart = JsonConvert.DeserializeObject<CartViewModel>(cartJson); //Necessary code for cart number
+        cartCount = cart.Items.Sum(i => i.Quantity);
+    }
+}
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -9,6 +21,8 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/COMP2139_Assignment1.styles.css" asp-append-version="true"/>
     <link rel="stylesheet" href="~/css/projectcss.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"> @* Required for the lil cart icon *@
+
 </head>
 <body>
 <header>
@@ -33,9 +47,20 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Categories</a>
                     </li>
+                    <li class="nav-item"><a class="nav-link text-dark" asp-area="" asp-controller="Purchase" asp-action="Index">Purchases</a></li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Purchase" asp-action="Index">Purchases</a>
+                        <a class="nav-link text-dark position-relative" asp-controller="Purchase" asp-action="Cart">
+                            <i class="bi bi-cart" style="font-size: 1.3rem;"></i>
+                            <span id="cart-count" 
+                                  class="badge bg-danger position-absolute top-0 start-100 translate-middle rounded-pill">
+                                @cartCount
+                                @* Adds cart icon with a number of purchases next to it *@
+                            </span>
+                        </a>
                     </li>
+
+
+
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
