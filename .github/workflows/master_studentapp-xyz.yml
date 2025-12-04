@@ -1,4 +1,4 @@
-name: Build and deploy ASP.NET Core app to Azure Web App - studentapp-xyz
+name: Build and deploy ASP.NET Core app to Azure Web App
 
 on:
   push:
@@ -9,14 +9,11 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup .NET
+      - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
@@ -24,30 +21,27 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build
+      - name: Build project
         run: dotnet build --configuration Release --no-restore
 
-      - name: Publish
-        run: dotnet publish --configuration Release --no-build --output ./publish
+      - name: Publish project
+        run: dotnet publish -c Release -o ./app
 
-      - name: Upload publish artifact
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: published-app
-          path: ./publish
+          name: app
+          path: ./app
 
   deploy:
     runs-on: windows-latest
     needs: build
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
-      - name: Download publish artifact
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: published-app
+          name: app
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -60,7 +54,9 @@ jobs:
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'studentapp-xyz'
-          package: './publish'
+          slot-name: 'Production'
+          package: ./app
 
 
           
+
