@@ -25,28 +25,22 @@ jobs:
           name: app
           path: ./app
 
-deploy:
-  runs-on: windows-latest
-  needs: build
-  steps:
-    - uses: actions/download-artifact@v4
-      with:
-        name: app
-        path: .
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: app
+          path: .
         
-    - uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0FAB4FC287434FBF89088479FF59F3D2 }}
-        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CCB33E198EFF4C7A9ACB8F22603E1DE0 }}
-        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_409C3EFAB71B4931961EBF15DCFCDF6F }}
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0FAB4FC287434FBF89088479FF59F3D2 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CCB33E198EFF4C7A9ACB8F22603E1DE0 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_409C3EFAB71B4931961EBF15DCFCDF6F }}
 
-    - uses: azure/webapps-deploy@v3
-      with:
-        app-name: studentapp-xyz
-        package: .
-
-
-          
-
-
-
+      - uses: azure/webapps-deploy@v3
+        with:
+          app-name: studentapp-xyz
+          package: .
