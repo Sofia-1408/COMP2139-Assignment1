@@ -1,34 +1,26 @@
 name: Build and deploy ASP.NET Core app to Azure Web App
 
+permissions:
+  id-token: write
+  contents: read
+
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
       - uses: actions/checkout@v4
-
-      - name: Set up .NET SDK
-        uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build project
-        run: dotnet build --configuration Release --no-restore
-
-      - name: Publish project
-        run: dotnet publish -c Release -o ./app
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - run: dotnet restore
+      - run: dotnet build -c Release --no-restore
+      - run: dotnet publish -c Release -o ./app
+      - uses: actions/upload-artifact@v4
         with:
           name: app
           path: ./app
@@ -36,27 +28,20 @@ jobs:
   deploy:
     runs-on: windows-latest
     needs: build
-
     steps:
-      - name: Download artifact
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
           name: app
-
-      - name: Login to Azure
-        uses: azure/login@v2
+      - uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0FAB4FC287434FBF89088479FF59F3D2 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CCB33E198EFF4C7A9ACB8F22603E1DE0 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_409C3EFAB71B4931961EBF15DCFCDF6F }}
-
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v3
+      - uses: azure/webapps-deploy@v3
         with:
-          app-name: 'studentapp-xyz'
-          slot-name: 'Production'
+          app-name: studentapp-xyz
           package: ./app
 
-
           
+
 
