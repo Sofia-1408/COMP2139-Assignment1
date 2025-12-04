@@ -74,7 +74,7 @@ public class PurchaseController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("PurchaseId,PurchaseDate,TotalCost,GuestContactInfo,EventId")] Purchase purchase) //Edit post
+    public async Task<IActionResult> Edit(int id, [Bind("PurchaseId,PurchaseDate,TotalCost,GuestContactInfo,EventId,Quantity")] Purchase purchase) //Edit post
     {
         if (id != purchase.PurchaseId)
             return NotFound();
@@ -116,7 +116,7 @@ public class PurchaseController : Controller
         return View(purchase);
     }
 
-    [HttpPost]
+    [HttpPost, ActionName("Delete")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id) //Delete post
     {
