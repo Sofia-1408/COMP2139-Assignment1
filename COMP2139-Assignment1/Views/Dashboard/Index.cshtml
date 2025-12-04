@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "My Dashboard";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">My Dashboard</h2>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title">My Tickets</h4>
+                    <p class="card-text">View your upcoming events and access your tickets.</p>
+                    <a asp-controller="Dashboard" asp-action="MyTickets" class="btn btn-primary">Go to My Tickets</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Purchase History</h4>
+                    <p class="card-text">See events you attended and leave ratings!</p>
+                    <a asp-controller="Dashboard" asp-action="PurchaseHistory" class="btn btn-primary">View Purchase History</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title">My Events</h4>
+                    <p class="card-text">Manage events you organize and see revenue.</p>
+                    <a asp-controller="Dashboard" asp-action="MyEvents" class="btn btn-primary">Manage My Events</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h4 class="card-title">Profile</h4>
+                    <p class="card-text">Update your contact details.</p>
+                    <a asp-controller="Dashboard" asp-action="Profile" class="btn btn-primary">Edit Profile</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 namespace COMP2139_Assignment1.Controllers;
-//The only "unusual" thing about this controller is the required methods to include categories and list them, other than that nothing unusual
+[Authorize]
 public class EventController : Controller
 {
      private readonly ApplicationDbContext _context; //Connection with the database
@@ -16,6 +17,7 @@ public class EventController : Controller
         _context = context;
     }
 
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Index(int? categoryId, string userSearch, string sortOrder, DateTime? startDate, DateTime? endDate, string availability) //Index get
     {
@@ -77,6 +79,7 @@ public class EventController : Controller
         return View(await events.ToListAsync());
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public IActionResult Create() //Create get 
     {
@@ -84,6 +87,7 @@ public class EventController : Controller
         return View();
     }
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Event @event) //Create post
@@ -101,6 +105,7 @@ public class EventController : Controller
         return View(@event);
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> Edit(int id) //Edit get
     {
@@ -113,6 +118,7 @@ public class EventController : Controller
         return View(@event);
     }
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, [Bind("EventId,Title,Date,TicketPrice,AvailableTickets,CategoryId")] Event @event) //Edit post
@@ -142,7 +148,7 @@ public class EventController : Controller
                     throw;
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("MyEvents", "Dashboard");
         }
         Log.Information("Unsuccessfully edited an event");
         ViewData["CategoryId"] = new SelectList(_context.Categories, "CategoryId", "Name", @event.CategoryId);
@@ -154,6 +160,7 @@ public class EventController : Controller
         return await _context.Events.AnyAsync(e => e.EventId == id);
     }
     
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Details(int id) //Details get
     {
@@ -166,6 +173,7 @@ public class EventController : Controller
         return View(@event);
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {
@@ -177,6 +185,7 @@ public class EventController : Controller
         return View(@event);
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id) //Delete post
@@ -203,6 +212,7 @@ public class EventController : Controller
 
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> Summary()
     {
@@ -213,6 +223,7 @@ public class EventController : Controller
         return View();
     }
     
+    [AllowAnonymous]
     [HttpGet]
     public async Task<IActionResult> Search(string userSearch, int? categoryId)
     {
@@ -232,12 +243,14 @@ public class EventController : Controller
     }
     
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet] //get page for MyAnalytics
     public IActionResult MyAnalytics()
     {
         return View();
     }
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet] //Get page for getting revenuepermonth
     public async Task<IActionResult> GetRevenuePerMonth()
     {
@@ -264,6 +277,7 @@ public class EventController : Controller
     }
 
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> GetTopEvents()
     {
@@ -282,6 +296,7 @@ public class EventController : Controller
     }
 
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> GetSalesByCategory()
     {

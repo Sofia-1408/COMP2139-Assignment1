@@ -1,0 +1,47 @@
+
+@model IEnumerable<COMP2139_Assignment1.Models.Event>
+
+@{
+    ViewData["Title"] = "My Events";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">My Events</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>You have not created any events yet.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Tickets Sold</th>
+                    <th>Total Revenue</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var evt in Model)
+            {
+                var ticketsSold = evt.Purchases?.Sum(p => p.Quantity) ?? 0;
+                var revenue = ticketsSold * evt.TicketPrice;
+
+                <tr>
+                    <td>@evt.Title</td>
+                    <td>@evt.Date.ToShortDateString()</td>
+                    <td>@ticketsSold</td>
+                    <td>@revenue.ToString("C")</td>
+                    <td>
+                        <a asp-controller="Event" asp-action="Edit" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a asp-controller="Event" asp-action="Delete" asp-route-id="@evt.EventId" class="btn btn-sm btn-outline-danger ms-1">Delete</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>

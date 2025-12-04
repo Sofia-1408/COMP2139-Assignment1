@@ -3,7 +3,7 @@ using COMP2139_Assignment1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace COMP2139_Assignment1.Controllers;
 
@@ -27,12 +27,14 @@ public class CategoryController : Controller
         return View(await categories.ToListAsync()); //Was throwing an unhandled exception so we will execute before sending it to view
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public IActionResult Create() //Create get
     {
         return View();
     }
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Category category) //Create post
@@ -49,6 +51,7 @@ public class CategoryController : Controller
         return View(category);
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> Edit(int id) //Edit get
     {
@@ -61,6 +64,7 @@ public class CategoryController : Controller
         return View(category);
     }
     
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(int id, [Bind("CategoryId, Name, Description")] Category category) //Edit post
@@ -112,6 +116,7 @@ public class CategoryController : Controller
         return View(category);
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpGet]
     public async Task<IActionResult> Delete(int id) //Delete get
     {
@@ -123,6 +128,7 @@ public class CategoryController : Controller
         return View(category);
     }
 
+    [Authorize(Roles = "Admin,Organizer")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> DeleteConfirmed(int id) //Delete post

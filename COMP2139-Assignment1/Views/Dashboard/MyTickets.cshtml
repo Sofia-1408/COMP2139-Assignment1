@@ -1,0 +1,47 @@
+@model IEnumerable<COMP2139_Assignment1.Models.Purchase>
+
+@{
+    ViewData["Title"] = "My Tickets";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">My Tickets</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <p>You do not have any upcoming tickets.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Quantity</th>
+                    <th>QR</th>
+                    <th>Ticket</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var purchase in Model)
+            {
+                var evt = purchase.Event;
+                <tr>
+                    <td>@evt?.Title</td>
+                    <td>@evt?.Date.ToShortDateString()</td>
+                    <td>@purchase.Quantity</td>
+                    <td>
+                        <span class="badge bg-secondary">QR</span>
+                    </td>
+                    <td>
+                        <a asp-controller="Purchase" asp-action="DownloadTicket" asp-route-id="@purchase.PurchaseId" class="btn btn-sm btn-outline-primary">
+                            Download PDF
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    }
+</div>
