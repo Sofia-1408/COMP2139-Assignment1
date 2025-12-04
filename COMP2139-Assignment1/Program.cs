@@ -8,6 +8,13 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Map Azure PostgreSQL connection string if present
+var azureConn = Environment.GetEnvironmentVariable("POSTGRESQLCONNSTR_DefaultConnection");
+if (!string.IsNullOrEmpty(azureConn))
+{
+    builder.Configuration["ConnectionStrings:DefaultConnection"] = azureConn;
+}
+
 
 // Serilog configuration
 Log.Logger = new LoggerConfiguration()
